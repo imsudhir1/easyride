@@ -3,10 +3,13 @@ const {
       getUserByEmail 
     } = require("./user.service");
     const { sign } =require("jsonwebtoken");
+    const { genSaltSync, hashSync } =require("bcrypt")
 
 module.exports = {
     createUser:(req, res) => {
         const body = req.body;
+        const salt = genSaltSync(10);
+        body.password = hashSync(body.password, salt);
           create(body, (err, results) => {
             if(err){
                 console.log(err);
@@ -33,8 +36,7 @@ module.exports = {
                     message:"Invalid email or password"
                 }) 
             }
-                   
-
+            // const result = comp
         })
      }
     }
