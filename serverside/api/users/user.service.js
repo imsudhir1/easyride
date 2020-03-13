@@ -17,21 +17,21 @@ module.exports = {
              (error, results, fields) => {
                  if(error){
                      return callback(error); 
-                 } return callback(null, results)
+                 } 
+                 return callback(null, results)
              } 
         );
     },
     getUserByEmail:(email, callback) => {
-        pool.query(
-            `SELECT * FROM 'driver' where email =?`,
+        pool.query( 
+            `SELECT * FROM driver where email =?`,
             [email],
             (error, results, fields) => {
                 if(error){
                     callback(error)
-                }
-                return callback(null, results);
+                } 
+                return callback(null, results[0]);
             }
         );
-
     }
 };

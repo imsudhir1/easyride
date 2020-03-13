@@ -3,24 +3,25 @@ const {
       getUserByEmail 
     } = require("./user.service");
     const { sign } =require("jsonwebtoken");
-    const { genSaltSync, hashSync } =require("bcrypt")
+    const { genSaltSync, hashSync, compareSync } = require("bcrypt")
 
-module.exports = {
+    module.exports = {
     createUser:(req, res) => {
         const body = req.body;
         const salt = genSaltSync(10);
         body.password = hashSync(body.password, salt);
           create(body, (err, results) => {
+              console.log(results);
             if(err){
-                console.log(err);
+                // console.log(err);
                     return res.status(500).json({
-                        success:0,
+                        success:false,
                         message:"db connection error"
                     }) 
               }
             return res.status(200).json({
-                success:0,
-                data:results
+                success:true,
+                // data:results
             })
         })
     },
@@ -36,7 +37,30 @@ module.exports = {
                     message:"Invalid email or password"
                 }) 
             }
-            // const result = comp
+            const result = compareSync(body.password, results.password);
+            if(result){
+                results.password = undefined;
+                const jsontoken = sign({result: results}, "qwe1234",{
+                    expiresIn: "1h"
+                });
+                return res.json({
+                    success:true,
+                    token:jsontoken,
+                    id:results.id,
+                    email: results.email,
+                    full_name: results.full_name,
+                    contact_number: results.contact_number,
+                    emergency_contact: results.emergency_contact,
+                    address: results.address,
+                    city: results.city,
+                    state: results.state,
+                    key_auth: results.key_auth
+                });
+            } else{
+                return res.json({
+                    success:false 
+                 });
+            }
         })
      }
     }
