@@ -6,8 +6,10 @@ app.use(bodyParser.json())
 app.use(cors());
 const port="3001";
 const userRouter = require('./api/users/user.router');
+const locationRouter = require('./api/location/location.router');
 
 app.use("/api/users", userRouter); 
+app.use("/api/location", locationRouter); 
 
  
 app.get("/api", (req, res) => {

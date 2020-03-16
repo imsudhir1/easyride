@@ -11,19 +11,13 @@ module.exports = {
         console.log(data.email);
         console.log('insert-data');
         console.log(data);
- 
-        pool.query(`insert into driver (email, full_name, contact_number, emergency_contact, password, address, city, state)
-             values (?,?,?,?,?,?,?,?)`,
-             [
-                 data.email,
-                 data.full_name,
-                 data.contact_number,
-                 data.emergency_contact,
-                 data.password,
-                 data.address, 
-                 data.city,
-                 data.state
-              ],
+        pool.query(`insert into location (longitude, latitude, address)
+             values (?,?,?)`,
+                [
+                data.longitude,
+                data.latitude,
+                data.address
+                ],
              (error, results, fields) => {
                  if(error){
                      return callback(error); 
@@ -123,7 +117,5 @@ module.exports = {
                  return callback(null, results)
              } 
         );
-    },
-    
- 
+    }
 };

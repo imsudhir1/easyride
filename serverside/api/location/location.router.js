@@ -5,7 +5,7 @@ const {
       docUpload,
       updatedUserLocation,
       createUserl
-} = require("./user.controller");
+} = require("./location.controller");
 const router = require("express").Router();
 const multer=require('multer')
 const upload =multer({dest:'./uploads'})
