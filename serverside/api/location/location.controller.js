@@ -4,24 +4,21 @@ const {
       updateUser,
       updateUserLocation 
     } = require("./location.service");
-    const { sign } =require("jsonwebtoken");
-    const { genSaltSync, hashSync, compareSync } = require("bcrypt")
 
     module.exports = {
     createUser:(req, res) => {
         const body = req.body;
           create(body, (err, results) => {
-              console.log(results);
+            //   console.log(results);
             if(err){ 
-                // console.log(err);
+                console.log(err);
                     return res.status(500).json({
                         success:false,
-                        message:"db connection error"
                     }) 
               }
             return res.status(200).json({
                 success:true,
-                // data:results
+                // data:res
             })
         })
     },
@@ -65,10 +62,8 @@ const {
      }, 
      updateUsers:(req, res) => {
         const body = req.body;
-        console.log(req.files);
-        // const salt = genSaltSync(10);
-        // body.password = hashSync(body.password, salt);
-        updateUser(body, req.files, (err, results) => {
+        updateUser(body, (err, results) => {
+            console.log(results.message.changed);
             if(err){
                 console.log(err);
                 return;
@@ -83,32 +78,9 @@ const {
                 success: true,
                 message: "updated successfully"
             });
-        }
+        } 
         });
-     },
-     updatedUserLocation:(req, res) => {
-        const body = req.body;
-        console.log(body)
-        // const salt = genSaltSync(10);
-        // body.password = hashSync(body.password, salt);
-        updateUserLocation(body, (err, results) => {
-            if(err){
-                console.log(err); 
-                return;
-            }
-            if(!results){
-                return res.json({
-                    success: false,
-                    message: "failed to update location"
-                });
-            } else{
-            return res.json({
-                success: true,
-                message: "Location updated successfully"
-            });
-         }
-        });
-    },
+     }, 
     createUserl:(req, res) => {
         const body = req.body;
           createl(body, (err, results) => {

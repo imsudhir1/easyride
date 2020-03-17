@@ -8,12 +8,12 @@ app.use(cors());
 
 module.exports = { 
     create: (data, callback) => {
-        console.log(data.email);
         console.log('insert-data');
         console.log(data);
-        pool.query(`insert into location (longitude, latitude, address)
-             values (?,?,?)`,
-                [
+        pool.query(`insert into location (id, longitude, latitude, address)
+             values (?,?,?,?)`,
+                [ 
+                data.id,
                 data.longitude,
                 data.latitude,
                 data.address
@@ -38,38 +38,18 @@ module.exports = {
             }
         );
     },
-    updateUser: (data, file, callBack) =>{
-
-    console.log(data);
-    console.log(file);
-    console.log(file[0].originalname);
-        pool.query(
-           `update driver set
-            vehicle_brand=?, 
-            vehicle_number=?, 
-            vehicle_model=?, 
-            vehicle_year=?, 
-            vehicle_color=?, 
-            vehicle_image=?,
-            passport_image=?,
-            driver_license_back=?,
-            driver_license_front=?,
-            vehicle_insure_ctft=?,
-            vehicle_reg_ctft=?
-            where id =?`,
+    updateUser: (data, callBack) =>{
+    // console.log(data);
+         pool.query(`update location set
+            longitude=?, 
+            latitude=?, 
+            address=? 
+            where id =?`, 
             [
-                data.vehicle_brand,
-                data.vehicle_number,
-                data.vehicle_model,
-                data.vehicle_year,
-                data.vehicle_color,
-                data.vehicle_brand,
-                file[0].originalname,
-                file[1].originalname,
-                file[2].originalname,
-                file[3].originalname,
-                file[4].originalname,
-                data.id
+            data.longitude,
+            data.latitude,
+            data.address,
+            data.id
             ],
             (error, results, fields) => {
               if (error) {
@@ -77,45 +57,6 @@ module.exports = {
               }
               return callBack(null, results);
             } 
-        );
-    }, 
-    updateUserLocation:(return_data, callback) => {
-        console.log(return_data);
-        pool.query(
-            `update location set
-            longitude=?,
-            latitude=?,
-            current_address=?,
-            where id =?`,
-             [
-                 return_data.longitude,
-                 return_data.latitude,
-                 return_data.current_address,
-                 return_data.id
-             ],
-             (error, results, fields) => {
-               if (error) {
-                 callBack(error);
-               }
-               return callBack(null, results);
-             } 
-         );
-    }, 
-    createl: (data, callback) => {
-        console.log(data.longitude)
-        pool.query(`insert into location (longitude, latitude, address)
-             values (?,?,?)`,
-             [
-                 data.longitude,
-                 data.latitude,
-                 data.address
-              ],
-             (error, results, fields) => {
-                 if(error){
-                     return callback(error); 
-                 } 
-                 return callback(null, results)
-             } 
         );
     }
 };

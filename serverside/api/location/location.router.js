@@ -19,8 +19,8 @@ var storage = multer.diskStorage({
     }
   })
 router.post("/", createUser);
-router.post("/login", login);
-router.patch("/", upload.any(), updateUsers);
-router.patch("/updatedUserLocation", updatedUserLocation);
-router.post("/createUserl", createUserl);
+// router.post("/login", login);
+// router.patch("/", upload.any(), updateUsers);
+router.patch("/", updateUsers);
+// router.post("/createUserl", createUserl);
 module.exports = router; 
