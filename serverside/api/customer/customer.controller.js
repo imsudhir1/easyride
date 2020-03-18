@@ -1,6 +1,7 @@
 const { 
       create,
       getcustomerByContact,
+      createcustomerByContact,
       updatecustomer,
       updatecustomerLocation 
     } = require("./customer.service");
@@ -16,7 +17,7 @@ const {
           create(body, (err, results) => {
               console.log(results.insertId);
             if(err){ 
-                // console.log(err);
+                // console.log(err);  
                     return res.status(500).json({
                         success:false,
                         message:"db connection error"
@@ -34,32 +35,52 @@ const {
         const body = req.body;
         console.log(req.body);
         
-        getcustomerByContact(body.contact, (err, results) => {
+        getcustomerByContact(body, (err, results) => {
             console.log(results)
             if(err){
                 console.log(err);
             }
             if(!results){
-                return res.status(500).json({
-                    success:0,
-                    message:"Invalid contact or otp"
+        console.log("contact not mached");
+                createcustomerByContact(body, (err, results) => {
+                    if(results.otp){
+                    if(body.otp === results.otp){
+                        console.log(true)
+                          const jsontoken = sign({result: results}, "qwe1234",{
+                           expiresIn: "1h"
+                       });
+                       return res.json({ 
+                           success:true,
+                           message:"contact saved otp send",
+                           token:jsontoken 
+                       })
+                   }}else{
+                    const jsontoken = sign({result: results}, "qwe1234",{
+                        expiresIn: "1h"
+                    });
+                       console.log(false)
+                       return res.json({
+                           success:false,
+                           token:jsontoken 
+
+                        });
+                   }
                 }) 
-            }
-            const result = compareSync(body.otp, results.otp);
-            console.log(result);
-            if(result){
-                results.otp = undefined;
+            } else{
                 const jsontoken = sign({result: results}, "qwe1234",{
                     expiresIn: "1h"
                 });
                 return res.json({
-                    success:true
+                    success:true,
+                    message:"contact matched otp send",
+                    token:jsontoken 
                 });
-            } else{
-                return res.json({
-                    success:false 
-                 });
             }
+            //  console.log("kkkk");
+            //  console.log(body);
+            //  console.log(results);
+            //  const result = compareSync(body.otp, results.otp);
+             
         })
      }, 
      updatecustomers:(req, res) => {
@@ -68,7 +89,7 @@ const {
         // const salt = genSaltSync(10);
         // body.password = hashSync(body.password, salt);
         updatecustomer(body, req.files, (err, results) => {
-            if(err){
+            if(err){ 
                 console.log(err);
                 return;
             }

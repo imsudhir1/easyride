@@ -32,11 +32,11 @@ module.exports = {
              } 
         );
     },
-    getcustomerByContact:(contact, callback) => {
+    getcustomerByContact:(body, callback) => {
         pool.query( 
             `SELECT * FROM customer where contact =?`,
-            [contact],
-            (error, results, fields) => {
+            [body.contact],
+            (error, results, fields) => { 
                 if(error){
                     callback(error)
                 } 
@@ -45,15 +45,14 @@ module.exports = {
         );
     },
     createcustomerByContact: (data, callback) => {
-        console.log(data.email);
         console.log('insert-contact');
         console.log(data);
         var otp="1234";
         pool.query(`insert into customer (contact, otp)
              values (?,?)`,
-             [
-                 data.contact,
-                 otp
+              [
+                data.contact,
+                otp
               ],
              (error, results, fields) => {
                  if(error){
