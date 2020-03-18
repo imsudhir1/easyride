@@ -1,15 +1,15 @@
 const { 
       create,
-      getUserByEmail,
-      updateUser,
-      updateUserLocation 
-    } = require("./user.service");
+      getcustomerByContact,
+      updatecustomer,
+      updatecustomerLocation 
+    } = require("./customer.service");
     const { sign } =require("jsonwebtoken");
     const { genSaltSync, hashSync, compareSync } = require("bcrypt")
     const pool = require("../../config/database")
 
     module.exports = {
-    createUser:(req, res) => {
+    createcustomer:(req, res) => {
         const body = req.body;
         const salt = genSaltSync(10); 
         body.password = hashSync(body.password, salt);
@@ -29,9 +29,12 @@ const {
             })
         })
     },
-    login:(req, res) => {
+    login:(req, res) => { 
+        console.log(".....................")
         const body = req.body;
-        getUserByEmail(body.email, (err, results) => {
+        console.log(req.body);
+        
+        getcustomerByContact(body.contact, (err, results) => {
             console.log(results)
             if(err){
                 console.log(err);
@@ -39,27 +42,18 @@ const {
             if(!results){
                 return res.status(500).json({
                     success:0,
-                    message:"Invalid email or password"
+                    message:"Invalid contact or otp"
                 }) 
             }
-            const result = compareSync(body.password, results.password);
+            const result = compareSync(body.otp, results.otp);
+            console.log(result);
             if(result){
-                results.password = undefined;
+                results.otp = undefined;
                 const jsontoken = sign({result: results}, "qwe1234",{
                     expiresIn: "1h"
                 });
                 return res.json({
-                    success:true,
-                    token:jsontoken,
-                    id:results.id,
-                    email: results.email,
-                    full_name: results.full_name,
-                    contact_number: results.contact_number,
-                    emergency_contact: results.emergency_contact,
-                    address: results.address,
-                    city: results.city,
-                    state: results.state,
-                    key_auth: results.key_auth
+                    success:true
                 });
             } else{
                 return res.json({
@@ -68,12 +62,12 @@ const {
             }
         })
      }, 
-     updateUsers:(req, res) => {
+     updatecustomers:(req, res) => {
         const body = req.body;
         console.log(req.files);
         // const salt = genSaltSync(10);
         // body.password = hashSync(body.password, salt);
-        updateUser(body, req.files, (err, results) => {
+        updatecustomer(body, req.files, (err, results) => {
             if(err){
                 console.log(err);
                 return;
@@ -81,7 +75,7 @@ const {
             if(!results){
                 return res.json({
                     success: false,
-                    message: "failed to update user"
+                    message: "failed to update customer"
                 });
             } else{
             return res.json({

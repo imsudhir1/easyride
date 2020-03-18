@@ -7,9 +7,11 @@ app.use(cors());
 const port="3001";
 const userRouter = require('./api/users/user.router');
 const locationRouter = require('./api/location/location.router');
+const customerRouter = require('./api/customer/customer.router');
 
 app.use("/api/users", userRouter); 
 app.use("/api/location", locationRouter); 
+app.use("/api/customer", customerRouter); 
 
  
 app.get("/api", (req, res) => {
