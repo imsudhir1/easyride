@@ -87,46 +87,6 @@ const {
             });
         }
         });
-     },
-     updatedUserLocation:(req, res) => {
-        const body = req.body;
-        console.log(body)
-        // const salt = genSaltSync(10);
-        // body.password = hashSync(body.password, salt);
-        updateUserLocation(body, (err, results) => {
-            if(err){
-                console.log(err); 
-                return;
-            }
-            if(!results){
-                return res.json({
-                    success: false,
-                    message: "failed to update location"
-                });
-            } else{
-            return res.json({
-                success: true,
-                message: "Location updated successfully"
-            });
-         }
-        });
-    },
-    createUserl:(req, res) => {
-        const body = req.body;
-          createl(body, (err, results) => {
-              console.log(results);
-            if(err){
-                // console.log(err);
-                    return res.status(500).json({
-                        success:false,
-                        message:"db connection error"
-                    }) 
-              }
-            return res.status(200).json({
-                success:true,
-                // data:results
-            })
-        })
-    }
+     }
 }
   

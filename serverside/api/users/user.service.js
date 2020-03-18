@@ -84,46 +84,6 @@ module.exports = {
               return callBack(null, results);
             } 
         );
-    }, 
-    updateUserLocation:(return_data, callback) => {
-        console.log(return_data);
-        pool.query(
-            `update location set
-            longitude=?,
-            latitude=?,
-            current_address=?,
-            where id =?`,
-             [
-                 return_data.longitude,
-                 return_data.latitude,
-                 return_data.current_address,
-                 return_data.id
-             ],
-             (error, results, fields) => {
-               if (error) {
-                 callBack(error);
-               }
-               return callBack(null, results);
-             } 
-         );
-    }, 
-    createl: (data, callback) => {
-        console.log(data.longitude)
-        pool.query(`insert into location (longitude, latitude, address)
-             values (?,?,?)`,
-             [
-                 data.longitude,
-                 data.latitude,
-                 data.address
-              ],
-             (error, results, fields) => {
-                 if(error){
-                     return callback(error); 
-                 } 
-                 return callback(null, results)
-             } 
-        );
-    },
-    
+    } 
  
 };
