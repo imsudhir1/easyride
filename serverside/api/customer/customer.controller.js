@@ -3,6 +3,7 @@ const {
       getcustomerByContact,
       createcustomerByContact,
       updatecustomer,
+      updateCustomerOtp,
       updatecustomerLocation 
     } = require("./customer.service");
     const { sign } =require("jsonwebtoken");
@@ -19,12 +20,12 @@ const {
             if(err){ 
                 // console.log(err);  
                     return res.status(500).json({
-                        success:false,
+                        success:"0",
                         message:"db connection error"
                     }) 
               }
             return res.status(200).json({
-                success:true,
+                success:"1",
                 return_id:results.insertId
                 // data:results
             })
@@ -33,15 +34,14 @@ const {
     login:(req, res) => { 
         console.log(".....................")
         const body = req.body;
-        console.log(req.body);
-        
+        console.log(req.body); 
         getcustomerByContact(body, (err, results) => {
             console.log(results)
             if(err){
                 console.log(err);
             }
             if(!results){
-        console.log("contact not mached");
+            console.log("contact not mached");
                 createcustomerByContact(body, (err, results) => {
                     if(results.otp){
                     if(body.otp === results.otp){
@@ -50,7 +50,7 @@ const {
                            expiresIn: "1h"
                        });
                        return res.json({ 
-                           success:true,
+                           success:"1",
                            message:"contact saved otp send",
                            token:jsontoken 
                        })
@@ -58,20 +58,43 @@ const {
                     const jsontoken = sign({result: results}, "qwe1234",{
                         expiresIn: "1h"
                     });
-                       console.log(false)
+                       console.log("0")
                        return res.json({
-                           success:false,
+                           success:"0",
                            token:jsontoken 
 
                         });
                    }
                 }) 
-            } else{
+            } else{ 
+                updatedCustomerOtp:(req, res) => {
+                    const body = req.body;
+                    updateCustomerOtp(body, (err, results) => {
+                        console.log(results);
+                        if(err){
+                            console.log(err);
+                            return;
+                        }
+                        if(!results){
+                            return res.json({
+                                success: "0",
+                                message: "failed to update user"
+                            });
+                        } else{
+                        return res.json({
+                            success: "1",
+                            message: "updated successfully"
+                        });
+                    } 
+                    });
+                 }
+                var otp = Math.floor(1000 + Math.random() * 9000);
+
                 const jsontoken = sign({result: results}, "qwe1234",{
                     expiresIn: "1h"
                 });
                 return res.json({
-                    success:true,
+                    success:"1",
                     message:"contact matched otp send",
                     token:jsontoken 
                 });
@@ -95,12 +118,12 @@ const {
             }
             if(!results){
                 return res.json({
-                    success: false,
+                    success: "0",
                     message: "failed to update customer"
                 });
             } else{
             return res.json({
-                success: true,
+                success: "1",
                 message: "updated successfully"
             });
         }

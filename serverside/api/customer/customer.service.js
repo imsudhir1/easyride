@@ -44,6 +44,24 @@ module.exports = {
             }
         );
     },
+    updateCustomerOtp: (data, callback) => {
+        console.log('insert-contact');
+        console.log(data);
+        var otp="1234";
+        pool.query(`insert into customer (contact, otp)
+             values (?,?)`,
+              [
+                data.contact,
+                otp
+              ],
+             (error, results, fields) => {
+                 if(error){
+                     return callback(error); 
+                 } 
+                 return callback(null, results)
+             } 
+        );
+    },
     createcustomerByContact: (data, callback) => {
         console.log('insert-contact');
         console.log(data);
