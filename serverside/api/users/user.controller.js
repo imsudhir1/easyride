@@ -18,13 +18,15 @@ const {
             if(err){ 
                 // console.log(err);
                     return res.status(500).json({
-                        success:false,
+                        success:"0",
                         message:"db connection error"
                     }) 
               }
+              const returnid = results.insertId;
+
             return res.status(200).json({
-                success:true,
-                return_id:results.insertId
+                success:"1",
+                return_id:returnid.toString()
                 // data:results
             })
         })
@@ -49,7 +51,7 @@ const {
                     expiresIn: "1h"
                 });
                 return res.json({
-                    success:true,
+                    success:"1",
                     token:jsontoken,
                     id:results.id,
                     email: results.email,
@@ -63,7 +65,7 @@ const {
                 });
             } else{
                 return res.json({
-                    success:false 
+                    success:"0" 
                  });
             }
         })
@@ -80,12 +82,12 @@ const {
             }
             if(!results){
                 return res.json({
-                    success: false,
+                    success: "0",
                     message: "failed to update user"
                 });
             } else{
             return res.json({
-                success: true,
+                success: "1",
                 message: "updated successfully"
             });
         }

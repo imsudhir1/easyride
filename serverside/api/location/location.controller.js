@@ -11,11 +11,11 @@ const {
             if(err){ 
                 console.log(err);
                     return res.status(500).json({
-                        success:false,
+                        success:"0",
                     }) 
               }
             return res.status(200).json({
-                success:true,
+                success:"1",
                 // data:res
             })
         })
@@ -30,12 +30,12 @@ const {
             }
             if(!results){
                 return res.json({
-                    success: false,
+                    success: "0",
                     message: "failed to update user"
                 });
             } else{
             return res.json({
-                success: true,
+                success: "1",
                 message: "updated successfully"
             });
         } 
