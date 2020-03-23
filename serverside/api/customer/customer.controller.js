@@ -116,9 +116,12 @@ const {
                 console.log(err);
             }
             if(results.otp===getBody.otp){
-            
+            const jsontoken = sign({result: results}, "qwe1234",{
+                expiresIn: "1h"
+            });
             return res.json({
                 success:"1",
+                token:jsontoken,
                 message:"Otp verified"
             });
         }else{
