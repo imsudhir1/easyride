@@ -44,28 +44,27 @@ module.exports = {
             }
         );
     },
-    updateCustomerOtp: (data, callback) => {
-        console.log('insert-contact');
+    updateCustomerOtp: (data, otp, callback) => {
         console.log(data);
-        var otp="1234";
-        pool.query(`insert into customer (contact, otp)
-             values (?,?)`,
-              [
-                data.contact,
-                otp
-              ],
-             (error, results, fields) => {
-                 if(error){
-                     return callback(error); 
-                 } 
-                 return callback(null, results)
+        pool.query(
+            `update customer set 
+             otp=?
+             where contact=?`,
+             [ 
+                otp,
+                data.contact
+             ],
+            (error, results, fields) => { 
+                if(error){
+                    return callback(error); 
+            } 
+                  return callback(null, results)
              } 
         );
     },
-    createcustomerByContact: (data, callback) => {
+    createcustomerByContact: (data, otp, callback) => {
         console.log('insert-contact');
         console.log(data);
-        var otp="1234";
         pool.query(`insert into customer (contact, otp)
              values (?,?)`,
               [

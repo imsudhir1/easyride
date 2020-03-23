@@ -32,80 +32,104 @@ const {
         })
     },
     login:(req, res) => { 
-        console.log(".....................")
+        console.log("...................../");
         const body = req.body;
         console.log(req.body); 
+        if(body.contact){ 
         getcustomerByContact(body, (err, results) => {
-            console.log(results)
             if(err){
                 console.log(err);
-            }
+            } 
             if(!results){
             console.log("contact not mached");
-                createcustomerByContact(body, (err, results) => {
-                    if(results.otp){
-                    if(body.otp === results.otp){
-                        console.log(true)
-                          const jsontoken = sign({result: results}, "qwe1234",{
-                           expiresIn: "1h"
-                       });
+            var generateOtp = Math.floor(1000 + Math.random() * 9000);
+                createcustomerByContact(body, generateOtp, (err, results) => {
+                console.log(results);
+                console.log("lllllllll");
+                    if(results.affectedRows){
+                      
                        return res.json({ 
                            success:"1",
                            message:"contact saved otp send",
-                           token:jsontoken 
+                           otp:generateOtp 
                        })
-                   }}else{
-                    const jsontoken = sign({result: results}, "qwe1234",{
-                        expiresIn: "1h"
-                    });
-                       console.log("0")
+                   }else{
                        return res.json({
                            success:"0",
-                           token:jsontoken 
-
                         });
                    }
                 }) 
             } else{ 
-                updatedCustomerOtp:(req, res) => {
-                    const body = req.body;
-                    updateCustomerOtp(body, (err, results) => {
+                console.log("update otp part//////////");
+                var otp = Math.floor(1000 + Math.random() * 9000);
+                updateCustomerOtp(body, otp, (err, results) => {
                         console.log(results);
+                        console.log("......///////");
                         if(err){
                             console.log(err);
                             return;
                         }
-                        if(!results){
-                            return res.json({
-                                success: "0",
-                                message: "failed to update user"
-                            });
+                        if(results.affectedRows){
+                            getcustomerByContact(body, (err, results) => {
+                                console.log(">>>>>>>");
+                                console.log(results);
+                                console.log(">>>>>>>");
+                                if(err){
+                                    console.log(err);
+                                } 
+                            if(!results.otp){
+                                return res.json({
+                                    success:"0",
+                                    message:"otp not found"
+                                });
+                            } else{
+                                return res.json({
+                                    success:"1",
+                                    otp:results.otp,
+                                    message:"contact matched otp send"
+                                });
+                            }                            
+                          });
                         } else{
-                        return res.json({
-                            success: "1",
-                            message: "updated successfully"
-                        });
-                    } 
+                                return res.json({
+                                    success:"0",
+                                    message:"otp not updated"
+                                });
+                              } 
                     });
-                 }
-                var otp = Math.floor(1000 + Math.random() * 9000);
-
-                const jsontoken = sign({result: results}, "qwe1234",{
-                    expiresIn: "1h"
-                });
-                return res.json({
-                    success:"1",
-                    message:"contact matched otp send",
-                    token:jsontoken 
-                });
+                 
             }
-            //  console.log("kkkk");
-            //  console.log(body);
-            //  console.log(results);
-            //  const result = compareSync(body.otp, results.otp);
-             
         })
-     }, 
+    }else{
+        return res.json({
+            success:"0",
+            message:"contact required"
+        });
+    }
+     },
+     verify:(req, res) => {
+         var getBody = req.body;
+         console.log(getBody);
+        getcustomerByContact(getBody, (err, results) => {
+            console.log(results)
+            if(err){
+                console.log(err);
+            }
+            if(results.otp===getBody.otp){
+            
+            return res.json({
+                success:"1",
+                message:"Otp verified"
+            });
+        }else{
+            return res.json({
+                success:"0",
+                message:"Wrong otp"
+            });
+        }
+        })
+     
+      },
      updatecustomers:(req, res) => {
         const body = req.body;
         console.log(req.files);
