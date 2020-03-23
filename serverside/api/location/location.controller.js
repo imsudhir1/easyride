@@ -7,7 +7,7 @@ const {
     createUser:(req, res) => {
         const body = req.body;
           create(body, (err, results) => {
-            //   console.log(results);
+              console.log(results);
             if(err){ 
                 console.log(err);
                     return res.status(500).json({
@@ -22,6 +22,8 @@ const {
     },
     updatedLocation:(req, res) => {
         const body = req.body;
+        console.log(body);
+        if(body.id && body.longitude && body.latitude){
         updateLocation(body, (err, results) => {
             console.log(results);
             if(err){
@@ -40,5 +42,11 @@ const {
             });
         } 
         });
+    }else{
+        return res.json({
+            success: "0",
+            message: "Fill all required field"
+        });
+    }
      }
-}
+} 
