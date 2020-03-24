@@ -2,6 +2,7 @@ const {
       createcustomer,
       login,
       verify,
+      searchDriver,
       updatecustomers,
   } = require("./customer.controller");
 const router = require("express").Router();
@@ -19,4 +20,5 @@ var storage = multer.diskStorage({
 router.post("/", createcustomer);
 router.post("/login", login);
 router.get("/verify", verify);
+router.patch("/searchDriver", searchDriver);
 module.exports = router; 

@@ -79,46 +79,44 @@ module.exports = {
              } 
         );
     },
-    updatecustomer: (data, file, callBack) =>{
-
-    console.log(data);
-    console.log(file);
-    console.log(file[0].originalname);
+    updateCustomerLocation:(data, callback)=>{
         pool.query(
-           `update driver set
-            vehicle_brand=?, 
-            vehicle_number=?, 
-            vehicle_model=?, 
-            vehicle_year=?, 
-            vehicle_color=?, 
-            vehicle_image=?,
-            passport_image=?,
-            driver_license_back=?,
-            driver_license_front=?,
-            vehicle_insure_ctft=?,
-            vehicle_reg_ctft=?
-            where id =?`,
-            [
-                data.vehicle_brand,
-                data.vehicle_number,
-                data.vehicle_model,
-                data.vehicle_year,
-                data.vehicle_color,
-                data.vehicle_brand,
-                file[0].originalname,
-                file[1].originalname,
-                file[2].originalname,
-                file[3].originalname,
-                file[4].originalname,
-                data.id
-            ],
-            (error, results, fields) => {
-              if (error) {
-                callBack(error);
-              }
-              return callBack(null, results);
+            `update customer set
+             plat=?,
+             plong=?,
+             dlat=?,
+             dlong=?, 
+             pickup=?,
+             dropl=?
+             where contact=?`,
+             [ 
+                 data.plat,
+                 data.plong,
+                 data.dlat,
+                 data.dlong,
+                data.pickup,
+                data.dropl,
+                data.contact
+             ],
+            (error, results, fields) => { 
+                if(error){
+                    return callback(error); 
             } 
+                  return callback(null, results)
+             } 
         );
-    } 
+    },
+    driverList:(data, callback)=>{
+        pool.query( 
+            `SELECT * FROM location where id IN (SELECT id FROM driver WHERE verifystatus = 1)`,
+            [data.contact],
+            (error, results, fields) => { 
+                if(error){
+                    callback(error)
+                } 
+                return callback(null, results);
+            }
+        );
+    },
  
-};
+}; 

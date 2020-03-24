@@ -4,6 +4,8 @@ const {
       createcustomerByContact,
       updatecustomer,
       updateCustomerOtp,
+      driverList,
+      updateCustomerLocation,
       updatecustomerLocation 
     } = require("./customer.service");
     const { sign } =require("jsonwebtoken");
@@ -120,7 +122,7 @@ const {
                 expiresIn: "1h"
             });
             return res.json({
-                success:"1",
+                success:"1", 
                 token:jsontoken,
                 message:"Otp verified"
             });
@@ -133,6 +135,85 @@ const {
         })
      
       },
+      searchDriver:(req, res) => {
+        const body = req.body;
+        console.log(body);
+        if(body.contact && body.pickup && body.dropl){
+        updateCustomerLocation(body, (err, results) => {
+            console.log(results.affectedRows);
+            if(err){
+                console.log(err);
+                return;
+            }
+            if(!results.affectedRows){
+                return res.json({
+                    success: "0",
+                    message: "failed to update user"
+                });
+            } else{
+                driverList(body, (err, results) => {
+                    console.log(body);
+                    console.log(results);
+                    function getDistance(clat1, clon1, dlat2, dlon2, unit) {
+                        if ((clat1 == dlat2) && (clon1 == dlon2)) {
+                            return 0;
+                        }
+                        else {
+                            var radlat1 = Math.PI * clat1/180;
+                            var radlat2 = Math.PI * dlat2/180;
+                            var theta = clon1-dlon2;
+                            var radtheta = Math.PI * theta/180;
+                            var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+                            if (dist > 1) {
+                                dist = 1;
+                            }
+                            dist = Math.acos(dist);
+                            dist = dist * 180/Math.PI;
+                            dist = dist * 60 * 1.1515;
+                            if (unit=="K") { dist = dist * 1.609344 }
+                            if (unit=="N") { dist = dist * 0.8684 }
+                            return dist;
+                        }
+                    }
+                    console.log('.......'); 
+
+                    var returned_data =Array;
+//                     returned_data=['77777','8888888','uiii'];
+//                     var alphas; 
+// alphas = ["1","2","3","4"] ;
+                    console.log(returned_data); 
+                    results.forEach(driver => {
+                        getcustomerByContact(body, (err, results) => {
+                            if(err){
+                                console.log(err);
+                            } 
+                            console.log(driver); 
+                            console.log(results); 
+                           var distance= getDistance(driver.latitude, driver.longitude, results.plat, results.plong)/0.6217;
+                            console.log(distance);
+                    }); 
+                    //    getDistance(element.latitude, element.longitude, dlat2, dlon2, unit);
+                        // console.log(element.id); 
+                    });
+                    console.log(typeof(results));
+                    if(err){
+                        console.log(err);
+                        return;
+                    }
+                    return res.json({
+                        success: "1",
+                        message: "searching"
+                    }); 
+                }); 
+        } 
+        });
+    }else{
+        return res.json({
+            success: "0",
+            message: "Fill all required field"
+        });
+    }
+     },
      updatecustomers:(req, res) => {
         const body = req.body;
         console.log(req.files);
