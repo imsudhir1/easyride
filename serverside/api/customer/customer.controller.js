@@ -137,10 +137,10 @@ const {
       },
       searchDriver:(req, res) => {
         const body = req.body;
-        console.log(body);
+        // console.log(body);
         if(body.contact && body.pickup && body.dropl){
         updateCustomerLocation(body, (err, results) => {
-            console.log(results.affectedRows);
+            // console.log(results.affectedRows);
             if(err){
                 console.log(err);
                 return;
@@ -152,8 +152,8 @@ const {
                 });
             } else{
                 driverList(body, (err, results) => {
-                    console.log(body);
-                    console.log(results);
+                    // console.log(body);
+                    // console.log(results);
                     function getDistance(clat1, clon1, dlat2, dlon2, unit) {
                         if ((clat1 == dlat2) && (clon1 == dlon2)) {
                             return 0;
@@ -177,32 +177,51 @@ const {
                     }
                     console.log('.......'); 
 
-                    var returned_data =Array;
-//                     returned_data=['77777','8888888','uiii'];
-//                     var alphas; 
-// alphas = ["1","2","3","4"] ;
-                    console.log(returned_data); 
-                    results.forEach(driver => {
-                        getcustomerByContact(body, (err, results) => {
-                            if(err){
-                                console.log(err);
-                            } 
-                            console.log(driver); 
-                            console.log(results); 
-                           var distance= getDistance(driver.latitude, driver.longitude, results.plat, results.plong)/0.6217;
-                            console.log(distance);
+                    // var returned_data =Array;
+                    var returned_data = [];
+                    var vvv="jjjjjjjjjjjjjjjjjjjj";
+                   var bb= getcustomerByContact(body, (err, results) => {
+                        if(err){
+                            console.log(err);
+                        } 
+                        // console.log(driver.id); 
+                    var plat = results.plat;
+                    var plong = results.plong;
+                        // var distance= getDistance(driver.latitude, driver.longitude, results.plat, results.plong)/0.6217;
+                        // console.log(plong);
                     }); 
+                    results.forEach(driver => {
                     //    getDistance(element.latitude, element.longitude, dlat2, dlon2, unit);
-                        // console.log(element.id); 
+                    // var returned_data1 = getcustomerByContact(body, (err, results) => {
+                    //     if(err){
+                    //         console.log(err);
+                    //     } 
+                    //     // console.log(driver.id); 
+                    //     var key = driver.id;
+                    //     var distance= getDistance(driver.latitude, driver.longitude, results.plat, results.plong)/0.6217;
+                    //     var getDistanceString= distance.toString().concat("|").concat(key);
+                    //     returned_data.push(getDistanceString);
+                    //     returned_data = returned_data.sort();
+                    //     console.log(returned_data);
+                    //     console.log(".............>>>");
+                    //     return returned_data
+                    // }); 
+                        var key = driver.id;
+                        console.log(body);
+                    var distance= getDistance(driver.latitude, driver.longitude, body.plat, body.plong)/0.6217;
+                        var getDistanceString= distance.toString().concat("|").concat(key);
+                        returned_data.push(getDistanceString);
+                        returned_data = returned_data.sort();
                     });
-                    console.log(typeof(results));
+                    console.log(returned_data);
                     if(err){
                         console.log(err);
                         return;
                     }
                     return res.json({
                         success: "1",
-                        message: "searching"
+                        driverData:returned_data[0],
+                        message: "searching.."
                     }); 
                 }); 
         } 
