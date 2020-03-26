@@ -125,16 +125,15 @@ const {
                         console.log(err);
                         return;
                     }
-                    var customerJsontoken = sign({result: results}, "qwe1234",{
-                        expiresIn: "1h"
-                    });
-                    return res.json({
-                        success:"1", 
-                        token:customerJsontoken,
-                        message:"Otp verified"
-                    });
                 });        
-           
+            const jsontoken = sign({result: results}, "qwe1234",{
+                expiresIn: "1h"
+            });
+            return res.json({
+                success:"1", 
+                token:jsontoken,
+                message:"Otp verified"
+            });
         }else{
             return res.json({
                 success:"0",
