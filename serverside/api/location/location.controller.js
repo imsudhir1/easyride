@@ -5,20 +5,27 @@ const {
 
     module.exports = {
     createUser:(req, res) => {
-        const body = req.body;
+        var body = req.body;
+        console.log(body);
+        if(body.id && body.longitude && body.latitude && body.address && body.fcmtoken){
           create(body, (err, results) => {
-              console.log(results);
+            //   console.log(results);
             if(err){ 
                 console.log(err);
                     return res.status(500).json({
                         success:"0",
                     }) 
-              }
+              } 
             return res.status(200).json({
                 success:"1",
-                // data:res
             })
+        });
+    } else{
+        return res.status(200).json({
+            success:"0",
+            message: "Fill all required field"
         })
+    }
     },
     updatedLocation:(req, res) => {
         const body = req.body;

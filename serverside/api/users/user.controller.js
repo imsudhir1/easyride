@@ -46,6 +46,7 @@ const {
             }
             const result = compareSync(body.password, results.password);
             if(result){
+                console.log(results.id);
                 results.password = undefined;
                 const jsontoken = sign({result: results}, "qwe1234",{
                     expiresIn: "1h"
@@ -65,7 +66,7 @@ const {
                 });
             } else{
                 return res.json({
-                    success:"0" 
+                    success:"06" 
                  });
             }
         })
