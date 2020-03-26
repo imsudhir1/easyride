@@ -106,7 +106,7 @@ module.exports = {
              } 
         );
     },
-    driverList:(data, callback)=>{
+    driverList:(data, callback) => {
         pool.query( 
             `SELECT * FROM location where id IN (SELECT id FROM driver WHERE verifystatus = 1)`,
             [data.contact],
@@ -118,5 +118,22 @@ module.exports = {
             }
         );
     },
+    updateCustomerFcm:(data, callback) => {
+        pool.query(
+            `update customer set
+            fcmtoken=?
+            where contact=?`,
+             [ 
+                data.fcmtoken,
+                data.contact
+             ],
+            (error, results, fields) => { 
+                if(error){
+                    return callback(error); 
+            } 
+                  return callback(null, results)
+             } 
+        );
+    }
  
 }; 

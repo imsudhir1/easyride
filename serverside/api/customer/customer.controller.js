@@ -6,7 +6,7 @@ const {
       updateCustomerOtp,
       driverList,
       updateCustomerLocation,
-      updatecustomerLocation 
+      updateCustomerFcm 
     } = require("./customer.service");
     const { sign } =require("jsonwebtoken");
     const { genSaltSync, hashSync, compareSync } = require("bcrypt")
@@ -62,15 +62,15 @@ const {
                    }
                 }) 
             } else{ 
-                console.log("update otp part//////////");
+                console.log("update otp part //////////");
                 var otp = Math.floor(1000 + Math.random() * 9000);
                 updateCustomerOtp(body, otp, (err, results) => {
                         console.log(results);
                         console.log("......///////");
-                        if(err){
+                         if(err){
                             console.log(err);
                             return;
-                        }
+                        } 
                         if(results.affectedRows){
                             getcustomerByContact(body, (err, results) => {
                                 console.log(">>>>>>>");
@@ -118,6 +118,14 @@ const {
                 console.log(err);
             }
             if(results.otp===getBody.otp){
+                updateCustomerFcm(getBody, (err, results) => {
+                    // console.log(results.affectedRows);
+                    // console.log(results); 
+                    if(err){
+                        console.log(err);
+                        return;
+                    }
+                });        
             const jsontoken = sign({result: results}, "qwe1234",{
                 expiresIn: "1h"
             });
@@ -213,14 +221,15 @@ const {
                         returned_data.push(getDistanceString);
                         returned_data = returned_data.sort();
                     });
-                    console.log(returned_data);
+                    console.log(returned_data[0]);
                     if(err){
                         console.log(err);
                         return;
                     }
+                    
                     return res.json({
                         success: "1",
-                        driverData:returned_data[0],
+                        driverData:returned_data,
                         message: "searching.."
                     }); 
                 }); 
