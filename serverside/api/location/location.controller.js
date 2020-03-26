@@ -23,7 +23,7 @@ const {
     updatedLocation:(req, res) => {
         const body = req.body;
         console.log(body);
-        if(body.id && body.longitude && body.latitude){
+        if(body.id && body.fcmtoken && body.longitude && body.latitude && body.address){
         updateLocation(body, (err, results) => {
             console.log(results);
             if(err){

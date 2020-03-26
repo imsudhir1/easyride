@@ -31,12 +31,14 @@ module.exports = {
          pool.query(`update location set
             longitude=?, 
             latitude=?, 
-            address=? 
+            address=?,
+            fcmtoken=? 
             where id =?`, 
             [
             data.longitude,
             data.latitude,
             data.address,
+            data.fcmtoken,
             data.id
             ],
             (error, results, fields) => {
