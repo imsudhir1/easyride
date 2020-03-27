@@ -54,7 +54,7 @@ const {
                 return res.json({
                     success:"1",
                     token:jsontoken,
-                    id:results.id,
+                    id:results.id.toString(),
                     email: results.email,
                     full_name: results.full_name,
                     contact_number: results.contact_number,
