@@ -69,12 +69,12 @@ module.exports = {
                 data.vehicle_model,
                 data.vehicle_year,
                 data.vehicle_color,
-                data.vehicle_brand,
                 file[0].originalname,
                 file[1].originalname,
                 file[2].originalname,
                 file[3].originalname,
                 file[4].originalname,
+                file[5].originalname,
                 data.id
             ],
             (error, results, fields) => {

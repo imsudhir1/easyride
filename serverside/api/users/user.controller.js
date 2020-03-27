@@ -66,7 +66,7 @@ const {
                 });
             } else{
                 return res.json({
-                    success:"06" 
+                    success:"0" 
                  });
             }
         })
