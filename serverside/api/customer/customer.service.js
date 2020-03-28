@@ -114,7 +114,7 @@ module.exports = {
                 if(error){
                     callback(error)
                 } 
-                return callback(null, results);
+                return callback(null, results); 
             }
         );
     },

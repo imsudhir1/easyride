@@ -6,6 +6,7 @@ const {
     module.exports = {
     createUser:(req, res) => {
         var body = req.body;
+        console.log(".........");
         console.log(body);
         if(body.id && body.longitude && body.latitude && body.address && body.fcmtoken){
           create(body, (err, results) => {

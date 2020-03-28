@@ -11,7 +11,9 @@ const {
     const { sign } =require("jsonwebtoken");
     const { genSaltSync, hashSync, compareSync } = require("bcrypt")
     const pool = require("../../config/database")
+    var admin = require("firebase-admin");
 
+    
     module.exports = {
     createcustomer:(req, res) => {
         const body = req.body;
@@ -179,7 +181,7 @@ const {
                             dist = Math.acos(dist);
                             dist = dist * 180/Math.PI;
                             dist = dist * 60 * 1.1515;
-                            if (unit=="K") { dist = dist * 1.609344 }
+                            if (unit=="K") { dist = dist * 1.609344 } 
                             if (unit=="N") { dist = dist * 0.8684 }
                             return dist;
                         }
@@ -200,29 +202,55 @@ const {
                         // console.log(plong);
                     }); 
                     results.forEach(driver => {
-                    //    getDistance(element.latitude, element.longitude, dlat2, dlon2, unit);
-                    // var returned_data1 = getcustomerByContact(body, (err, results) => {
-                    //     if(err){
-                    //         console.log(err);
-                    //     } 
-                    //     // console.log(driver.id); 
-                    //     var key = driver.id;
-                    //     var distance= getDistance(driver.latitude, driver.longitude, results.plat, results.plong)/0.6217;
-                    //     var getDistanceString= distance.toString().concat("|").concat(key);
-                    //     returned_data.push(getDistanceString);
-                    //     returned_data = returned_data.sort();
-                    //     console.log(returned_data);
-                    //     console.log(".............>>>");
-                    //     return returned_data
-                    // }); 
                         var key = driver.id;
                         console.log(body);
                     var distance= getDistance(driver.latitude, driver.longitude, body.plat, body.plong)/0.6217;
-                        var getDistanceString= distance.toString().concat("|").concat(key);
+                        // var getDistanceString= distance.toString().concat("|").concat(key);
+                        var getDistanceString= distance.toString().concat("|").concat(key).concat("|").concat(driver.fcmtoken);
                         returned_data.push(getDistanceString);
                         returned_data = returned_data.sort();
                     });
-                    console.log(returned_data[0]);
+                    console.log(returned_data[3]);
+
+                    if(returned_data[0]){
+                            var serviceAccount = require("C:/Users/FnB IT Serve Pvt Ltd/Documents/GitHub/easyride/serverside/privatekeyDriver.json");
+                            admin.initializeApp({
+                                credential: admin.credential.cert(serviceAccount),
+                                databaseURL: "https://easyride-272111.firebaseio.com"
+                            });
+                            var token = returned_data[0];
+                            var payload = {
+                                notification:{
+                                  title:"Customer Details",
+                                  body:body.contact
+                                  
+                                }
+                              }; 
+                              console.log(payload);
+                              var options = {
+                                priority: "high",
+                                timeToLive: 60 * 60 * 24
+                              };
+                            admin.messaging().sendToDevice(token, payload, options)
+                            .then((response) => {
+                                    console.log('Successfully sent message:', response);
+                                    var response = response.successCount
+                                    // console.log(response.results[0].error);
+                            }).catch((error) => { 
+                                    console.log('Error sending message:', error);
+                            });
+                                return res.json({
+                                    success: "1",
+                                    cutomerContact:body.contact,
+                                    driverId:returned_data[3].split("|")[1],
+                                    message: "notification sent.."
+                                });
+                    }else{
+                        return res.json({
+                            success: "0",
+                            message: "notification not sent.."
+                        }); 
+                    }
                     if(err){
                         console.log(err);
                         return;
