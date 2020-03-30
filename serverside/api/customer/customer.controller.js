@@ -12,7 +12,11 @@ const {
     const { genSaltSync, hashSync, compareSync } = require("bcrypt")
     const pool = require("../../config/database")
     var admin = require("firebase-admin");
-
+    var serviceAccount = require("C:/Users/FnB IT Serve Pvt Ltd/Documents/GitHub/easyride/serverside/privatekeyDriver.json");
+    admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+        databaseURL: "https://easyride-272111.firebaseio.com"
+    });
     
     module.exports = {
     createcustomer:(req, res) => {
@@ -210,25 +214,20 @@ const {
                         returned_data.push(getDistanceString);
                         returned_data = returned_data.sort();
                     });
-                    console.log(returned_data[3]);
+                    console.log(returned_data[0]);
 
-                    if(returned_data[0]){
-                            var serviceAccount = require("C:/Users/FnB IT Serve Pvt Ltd/Documents/GitHub/easyride/serverside/privatekeyDriver.json");
-                            admin.initializeApp({
-                                credential: admin.credential.cert(serviceAccount),
-                                databaseURL: "https://easyride-272111.firebaseio.com"
-                            });
-                            var token = returned_data[0];
+                    if(returned_data[3]){
+                            
+                            var token = returned_data[3];
                             var payload = {
                                 notification:{
                                   title:"Customer Details",
                                   body:body.contact
-                                  
                                 }
-                              }; 
+                              };
                               console.log(payload);
                               var options = {
-                                priority: "high",
+                                priority: "high", 
                                 timeToLive: 60 * 60 * 24
                               };
                             admin.messaging().sendToDevice(token, payload, options)
