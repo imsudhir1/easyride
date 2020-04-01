@@ -219,12 +219,23 @@ const {
                     if(returned_data[3]){
                             
                             var token = returned_data[3];
+
                             var payload = {
-                                notification:{
+                                notification: {
                                   title:"Customer Details",
-                                  body:body.contact
+                                  body: "Accept Booking"
+                                },
+                                data: {
+                                  contact: body.contact
                                 }
                               };
+
+                            // var payload = {
+                            //     notification:{
+                            //       title:"Customer Details",
+                            //       body:body.contact
+                            //     }
+                            //   };
                               console.log(payload);
                               var options = {
                                 priority: "high", 
