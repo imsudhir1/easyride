@@ -6,7 +6,8 @@ const {
       updateCustomerOtp,
       driverList,
       updateCustomerLocation,
-      updateCustomerFcm 
+      updateCustomerFcm,
+      getdriversByid 
     } = require("./customer.service");
     const { sign } =require("jsonwebtoken");
     const { genSaltSync, hashSync, compareSync } = require("bcrypt")
@@ -194,7 +195,6 @@ const {
 
                     // var returned_data =Array;
                     var returned_data = [];
-                    var vvv="jjjjjjjjjjjjjjjjjjjj";
                    var bb= getcustomerByContact(body, (err, results) => {
                         if(err){
                             console.log(err);
@@ -207,18 +207,17 @@ const {
                     }); 
                     results.forEach(driver => {
                         var key = driver.id;
-                        console.log(body);
+                        console.log(driver);
                     var distance= getDistance(driver.latitude, driver.longitude, body.plat, body.plong)/0.6217;
-                        // var getDistanceString= distance.toString().concat("|").concat(key);
                         var getDistanceString= distance.toString().concat("|").concat(key).concat("|").concat(driver.fcmtoken);
+                        // var getDistanceString= distance.toString().concat("|").concat(key).concat("|").concat(driver.fcmtoken);
                         returned_data.push(getDistanceString);
                         returned_data = returned_data.sort();
                     });
-                    console.log(returned_data[0]);
-
-                    if(returned_data[3]){
-                            
-                            var token = returned_data[3];
+                    if(returned_data[0] !==null){
+                            console.log("nnn...");
+                            var token = returned_data[0].split("|")[2];
+                            console.log(token);
 
                             var payload = {
                                 notification: {
@@ -227,16 +226,8 @@ const {
                                 },
                                 data: {
                                   contact: body.contact
-                                }
+                                } 
                               };
-
-                            // var payload = {
-                            //     notification:{
-                            //       title:"Customer Details",
-                            //       body:body.contact
-                            //     }
-                            //   };
-                              console.log(payload);
                               var options = {
                                 priority: "high", 
                                 timeToLive: 60 * 60 * 24
@@ -249,12 +240,27 @@ const {
                             }).catch((error) => { 
                                     console.log('Error sending message:', error);
                             });
+                            var driverid=returned_data[0].split("|")[1];
+                            getdriversByid(driverid, (err, results) => {
+                                console.log("driver details to customer........");
+                                console.log(results);
+                                    var driver_name = results.full_name;
+                                    var contact = results.contact_number;
+                                console.log(driver_name);
+                                if(err){
+                                    console.log(err); 
+                                }
+                                console.log(results);
+                                console.log("./././.");  
+                            }); 
+                            if(results.id !==null){
                                 return res.json({
                                     success: "1",
                                     cutomerContact:body.contact,
                                     driverId:returned_data[3].split("|")[1],
-                                    message: "notification sent.."
+                                    message: "notification sent..."
                                 });
+                            }
                     }else{
                         return res.json({
                             success: "0",

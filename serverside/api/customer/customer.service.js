@@ -108,13 +108,25 @@ module.exports = {
     },
     driverList:(data, callback) => {
         pool.query( 
-            `SELECT * FROM location where id IN (SELECT id FROM driver WHERE verifystatus = 1)`,
+            `SELECT * FROM location where id IN (SELECT id FROM driver WHERE availability = 1)`,
             [data.contact],
             (error, results, fields) => { 
                 if(error){
                     callback(error)
                 } 
                 return callback(null, results); 
+            }
+        );
+    },
+    getdriversByid:(driverid, callback) => {
+        pool.query( 
+            `SELECT id, full_name, contact_number FROM driver where id =?`,
+            [driverid],
+            (error, results, fields) => { 
+                if(error){
+                    callback(error)
+                } 
+                return callback(null, results[0]);
             }
         );
     },
