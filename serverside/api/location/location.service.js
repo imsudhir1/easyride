@@ -10,10 +10,12 @@ module.exports = {
     create: (data, callback) => {
         console.log('insert-data');
         console.log(data);
-        pool.query(`insert into location (id, longitude, latitude, address, fcmtoken)
-             values (?,?,?,?,?)`,
+        pool.query(`insert into location (id, name, contact, longitude, latitude, address, fcmtoken)
+             values (?,?,?,?,?,?,?)`,
                 [ 
                 data.id,
+                data.full_name,
+                data.contact_number,
                 data.longitude,
                 data.latitude,
                 data.address,

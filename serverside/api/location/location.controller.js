@@ -8,7 +8,7 @@ const {
         var body = req.body;
         console.log(".........");
         console.log(body);
-        if(body.id && body.longitude && body.latitude && body.address && body.fcmtoken){
+        if(body.id && body.full_name && body.contact_number && body.longitude && body.latitude && body.address && body.fcmtoken){
           create(body, (err, results) => {
             //   console.log(results);
             if(err){ 
@@ -18,7 +18,7 @@ const {
                     }) 
               } 
             return res.status(200).json({
-                success:"1",
+                success:"1"
             })
         });
     } else{

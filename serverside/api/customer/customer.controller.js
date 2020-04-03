@@ -209,15 +209,15 @@ const {
                         var key = driver.id;
                         console.log(driver);
                     var distance= getDistance(driver.latitude, driver.longitude, body.plat, body.plong)/0.6217;
-                        var getDistanceString= distance.toString().concat("|").concat(key).concat("|").concat(driver.fcmtoken);
+                    var getDistanceString= distance.toString().concat("|").concat(key).concat("|").concat(driver.fcmtoken).concat("|").concat(driver.contact).concat("|").concat(driver.name);
                         // var getDistanceString= distance.toString().concat("|").concat(key).concat("|").concat(driver.fcmtoken);
                         returned_data.push(getDistanceString);
                         returned_data = returned_data.sort();
                     });
-                    if(returned_data[0] !==null){
+                    if(returned_data[3] !==null){
                             console.log("nnn...");
-                            var token = returned_data[0].split("|")[2];
-                            console.log(token);
+                            var token = returned_data[3].split("|")[2];
+                            console.log(token,'llllllllllllllllllllllllllllll');
 
                             var payload = {
                                 notification: {
@@ -232,11 +232,10 @@ const {
                                 priority: "high", 
                                 timeToLive: 60 * 60 * 24
                               };
-                            admin.messaging().sendToDevice(token, payload, options)
+                            admin.messaging().sendToDevice('cYYxFxvwSGq6W7aRQzo9lH:APA91bGZLC-2-Uz0e2Q7tTjVotgMt-xO1AfaPQfP3OVkTmzml8We52FGUjOlaIXY8BcB-pOJnxFc9RwDKqf8badLBFzVL0m4TPM9ul6wmq8IpfRf1AjApdOpdLh0w0uX1B7DNfcbSz97', payload, options)
                             .then((response) => {
                                     console.log('Successfully sent message:', response);
-                                    var response = response.successCount
-                                    // console.log(response.results[0].error);
+                                    console.log(response.results[0].error);
                             }).catch((error) => { 
                                     console.log('Error sending message:', error);
                             });
@@ -246,7 +245,7 @@ const {
                                 console.log(results);
                                     var driver_name = results.full_name;
                                     var contact = results.contact_number;
-                                console.log(driver_name);
+                                console.log(driver_name); 
                                 if(err){
                                     console.log(err); 
                                 }
@@ -254,10 +253,12 @@ const {
                                 console.log("./././.");  
                             }); 
                             if(results.id !==null){
-                                return res.json({
+                                return res.json({ 
                                     success: "1",
                                     cutomerContact:body.contact,
                                     driverId:returned_data[3].split("|")[1],
+                                    contact:returned_data[3].split("|")[3],
+                                    name:returned_data[3].split("|")[4],
                                     message: "notification sent..."
                                 });
                             }
