@@ -12,14 +12,15 @@ module.exports = {
         console.log('insert-data');
         console.log(data);
  
-        pool.query(`insert into driver (email, full_name, contact_number, emergency_contact, password, address, city, state)
-             values (?,?,?,?,?,?,?,?)`,
+        pool.query(`insert into driver (email, full_name, contact_number, emergency_contact, password, fcm_token, address, city, state)
+             values (?,?,?,?,?,?,?,?,?)`,
              [
                  data.email,
                  data.full_name,
                  data.contact_number,
                  data.emergency_contact,
                  data.password,
+                 data.fcm_token,
                  data.address, 
                  data.city,
                  data.state
@@ -27,7 +28,25 @@ module.exports = {
              (error, results, fields) => {
                  if(error){
                      return callback(error); 
-                 } 
+                 }
+                 return callback(null, results)
+             } 
+        );
+    },
+    insertDriverIntoLocation: (data, returnid, callback) => {
+        console.log('insert to location');
+        pool.query(`insert into location (id, name, contact, emergency_contact)
+             values (?,?,?,?)`,
+             [
+                 returnid,
+                 data.full_name,
+                 data.contact_number,
+                 data.emergency_contact
+              ],
+             (error, results, fields) => {
+                 if(error){
+                     return callback(error); 
+                 }
                  return callback(null, results)
              } 
         );

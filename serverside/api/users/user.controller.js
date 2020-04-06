@@ -1,5 +1,6 @@
 const { 
       create,
+      insertDriverIntoLocation,
       getUserByEmail,
       updateUser,
       updateUserLocation 
@@ -21,9 +22,17 @@ const {
                         success:"0",
                         message:"db connection error"
                     }) 
+                    console.log(results);
               }
               const returnid = results.insertId;
-
+if(returnid){
+    insertDriverIntoLocation(body, returnid, (err, results) => {
+        console.log(body);
+        if(err){
+            console.log(err);
+        }
+    });
+}
             return res.status(200).json({
                 success:"1",
                 return_id:returnid.toString()
