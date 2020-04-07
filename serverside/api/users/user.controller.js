@@ -2,6 +2,7 @@ const {
       create,
       insertDriverIntoLocation,
       getUserByEmail,
+      updateDriverFcmTokenIntoLocation,
       updateUser,
       updateUserLocation 
     } = require("./user.service");
@@ -17,7 +18,7 @@ const {
           create(body, (err, results) => {
               console.log(results.insertId);
             if(err){ 
-                // console.log(err);
+                console.log(err);
                     return res.status(500).json({
                         success:"0",
                         message:"db connection error"
@@ -25,19 +26,25 @@ const {
                     console.log(results);
               }
               const returnid = results.insertId;
-if(returnid){
-    insertDriverIntoLocation(body, returnid, (err, results) => {
-        console.log(body);
-        if(err){
-            console.log(err);
-        }
-    });
-}
-            return res.status(200).json({
-                success:"1",
-                return_id:returnid.toString()
-                // data:results
-            })
+                if(returnid){
+                    insertDriverIntoLocation(body, returnid, (err, results) => {
+                        console.log(body);
+                        if(err){
+                            console.log(err);
+                        }
+                        if(results.affectedRows){
+                            return res.status(200).json({
+                                success:"1",
+                                return_id:returnid.toString()
+                            })
+                        }
+                    });
+                }else{
+                    return res.status(200).json({
+                        success:"0",
+                        message:"driver not inserted to location table"
+                    })
+                }
         })
     },
     login:(req, res) => {
@@ -56,9 +63,22 @@ if(returnid){
             const result = compareSync(body.password, results.password);
             if(result){
                 console.log(results.id);
+                var returnid = results.id;
                 results.password = undefined;
                 const jsontoken = sign({result: results}, "qwe1234",{
                     expiresIn: "1h"
+                });
+                updateDriverFcmTokenIntoLocation(body.fcm_token, returnid, (err, results) => {
+                   console.log(results);
+                    if(err){
+                        console.log(err);
+                    }
+                    if(!results.affectedRows){
+                        return res.json({
+                            success:"0",
+                            message:"fcm token not updated"
+                        })
+                    }
                 });
                 return res.json({
                     success:"1",
@@ -67,15 +87,18 @@ if(returnid){
                     email: results.email,
                     full_name: results.full_name,
                     contact_number: results.contact_number,
+                    profile_image: results.passport_image,
                     emergency_contact: results.emergency_contact,
                     address: results.address,
                     city: results.city,
                     state: results.state,
-                    key_auth: results.key_auth
+                    key_auth: results.key_auth,
+                    verify_status: results.verifystatus
                 });
             } else{
                 return res.json({
-                    success:"0" 
+                    success:"0", 
+                    message:"Invalid credentials"
                  });
             }
         })

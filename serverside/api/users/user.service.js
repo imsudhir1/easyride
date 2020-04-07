@@ -63,6 +63,24 @@ module.exports = {
             }
         );
     },
+    updateDriverFcmTokenIntoLocation:(fcm_token, returnid, callBack) => {
+        console.log(fcm_token, returnid);
+        pool.query(
+            `update location set
+             fcmtoken=?
+             where id =?`,
+             [
+                 fcm_token,
+                 returnid
+             ],
+             (error, results, fields) => {
+               if (error) {
+                 callBack(error);
+               }
+               return callBack(null, results);
+             } 
+        );
+    },
     updateUser: (data, file, callBack) =>{
 
     console.log(data);

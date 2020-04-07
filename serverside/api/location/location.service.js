@@ -29,17 +29,19 @@ module.exports = {
              } 
         );
     },
-    updateLocation: (data, callBack) =>{
+    updateLocation: (data, availability, callBack) =>{
     // console.log(data);
          pool.query(`update location set
             longitude=?, 
             latitude=?, 
-            address=? 
+            address=?,
+            availability=? 
             where id =?`, 
             [
             data.longitude,
             data.latitude,
             data.address,
+            availability,
             data.id
             ],
             (error, results, fields) => {

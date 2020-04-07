@@ -28,22 +28,24 @@ const {
         })
     }
     },
-    updatedLocation:(req, res) => {
+    updateDriverLocation:(req, res) => {
         const body = req.body;
         console.log(body);
-        if(body.id && body.longitude && body.latitude){
-        updateLocation(body, (err, results) => {
+        if(body.id && body.longitude && body.latitude && body.address){
+            var availability = 1;
+        updateLocation(body, availability, (err, results) => {
             console.log(results);
             if(err){
                 console.log(err);
                 return;
             }
-            if(!results){
+            if(!results.affectedRows){
                 return res.json({
                     success: "0",
                     message: "failed to update user"
                 });
-            } else{
+            }
+            else{
             return res.json({
                 success: "1",
                 message: "updated successfully"

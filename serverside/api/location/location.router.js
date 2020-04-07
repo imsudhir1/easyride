@@ -1,9 +1,9 @@
 const { 
       createUser,
-      updatedLocation,
+      updateDriverLocation,
 } = require("./location.controller");
 const router = require("express").Router();
 
 router.post("/", createUser);
-router.patch("/", updatedLocation);
+router.patch("/", updateDriverLocation);
 module.exports = router; 
