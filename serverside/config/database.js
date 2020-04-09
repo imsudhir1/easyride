@@ -1,10 +1,10 @@
 const { createPool } = require('mysql');
 
 const pool = createPool({
-    host: 'localhost',
-    user:'root',
-    password:'',
-    database: 'easyride_db',
+    host: 'easyride.cvjw9w2oarkh.us-east-2.rds.amazonaws.com',
+    user:'easyride',
+    password:'easyride',
+    database: 'easyride',
     connectionLimit:10
 });
 
