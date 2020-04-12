@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 var server = require('http').Server(app);
-var io = require('socket.io')(server);
 var bodyParser = require('body-parser');
 var cors = require('cors');
 app.use(bodyParser.json())
@@ -26,26 +25,6 @@ app.get("/api", (req, res) => {
         message:"weldone your rest api is working"
     })
 }) 
-
- 
- 
- 
-
-
-server.listen(80);
-// WARNING: app.listen(80) will NOT work here!
-
-app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/index.html');
-});
-
-io.on('connection', function (socket) {
-  socket.emit('news', { hello: 'world' });
-  socket.on('my other event', function (data) {
-    console.log(data);
-  });
-});
-
 
 
 
